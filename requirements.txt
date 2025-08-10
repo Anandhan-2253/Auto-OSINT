@@ -1,0 +1,9 @@
+argparse
+rich
+requests
+python-whois
+shodan
+dnspython
+networkx
+matplotlib
+email-validator
