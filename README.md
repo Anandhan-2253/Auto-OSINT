@@ -23,7 +23,6 @@
   <li>🌍 <b>IP Intelligence</b> – GeoIP, WHOIS, Reverse DNS, Shodan lookup</li>
   <li>📧 <b>Email OSINT</b> – Breach check &amp; validation</li>
   <li>👤 <b>Username OSINT</b> – Cross-platform search</li>
-  <li>📊 <b>Maltego-Style Graphs</b> – Relationship visualization</li>
   <li>📁 <b>Export Reports</b> – JSON with timestamps</li>
   <li>🎨 <b>Rich CLI Output</b> – Colorful and interactive tables</li>
 </ul>
