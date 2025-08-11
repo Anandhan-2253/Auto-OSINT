@@ -6,13 +6,18 @@ import os
 import json
 from datetime import datetime
 
-VERSION = "v1.0.0"
-
-console = Console()
 
 def print_banner():
-    banner = r"""
-▄▄▄       █    ██ ▄▄▄█████▓ ▒█████      ▒█████    ██████  ██▓ ███▄    █ ▄▄▄█████▓
+    # ANSI Colors
+    RED = "\033[91m"
+    YELLOW = "\033[93m"
+    CYAN = "\033[96m"
+    MAGENTA = "\033[95m"
+    GREEN = "\033[92m"
+    RESET = "\033[0m"
+
+    print(f"""
+{RED}▄▄▄       █    ██ ▄▄▄█████▓ ▒█████      ▒█████    ██████  ██▓ ███▄    █ ▄▄▄█████▓
 ▒████▄     ██  ▓██▒▓  ██▒ ▓▒▒██▒  ██▒   ▒██▒  ██▒▒██    ▒ ▓██▒ ██ ▀█   █ ▓  ██▒ ▓▒
 ▒██  ▀█▄  ▓██  ▒██░▒ ▓██░ ▒░▒██░  ██▒   ▒██░  ██▒░ ▓██▄   ▒██▒▓██  ▀█ ██▒▒ ▓██░ ▒░
 ░██▄▄▄▄██ ▓▓█  ░██░░ ▓██▓ ░ ▒██   ██░   ▒██   ██░  ▒   ██▒░██░▓██▒  ▐▌██▒░ ▓██▓ ░ 
@@ -21,10 +26,13 @@ def print_banner():
   ▒   ▒▒ ░░░▒░ ░ ░     ░      ░ ▒ ▒░      ░ ▒ ▒░ ░ ░▒  ░ ░ ▒ ░░ ░░   ░ ▒░    ░    
   ░   ▒    ░░░ ░ ░   ░      ░ ░ ░ ▒     ░ ░ ░ ▒  ░  ░  ░   ▒ ░   ░   ░ ░   ░      
       ░  ░   ░                  ░ ░         ░ ░        ░   ░           ░          
+                                                                                  
+{YELLOW}                              v1.0.0
+{CYAN}                      Developed by: {MAGENTA}R00tGh0sT
+{GREEN}             GitHub: https://github.com/Anandhan-2253
+{RESET}
+""")
 
-"""
-    console.print(banner, style="bold red")
-    console.print(f"Auto OSINT Toolkit {VERSION}\n", style="bold red", markup=False)
 
 def save_report(data, folder="reports"):
     if not os.path.exists(folder):
