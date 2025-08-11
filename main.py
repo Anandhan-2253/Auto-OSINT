@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# main.py — Auto OSINT Toolkit with Help & Examples
-
 import argparse
 from modules import ip_lookup, email_lookup, username_lookup
 from rich.console import Console
@@ -8,13 +5,27 @@ from rich.table import Table
 import os
 import json
 from datetime import datetime
-import sys
+
+VERSION = "v1.0.0"
 
 console = Console()
 
-# --------------------------
-# Save Report
-# --------------------------
+def print_banner():
+    banner = r"""
+▄▄▄       █    ██ ▄▄▄█████▓ ▒█████      ▒█████    ██████  ██▓ ███▄    █ ▄▄▄█████▓
+▒████▄     ██  ▓██▒▓  ██▒ ▓▒▒██▒  ██▒   ▒██▒  ██▒▒██    ▒ ▓██▒ ██ ▀█   █ ▓  ██▒ ▓▒
+▒██  ▀█▄  ▓██  ▒██░▒ ▓██░ ▒░▒██░  ██▒   ▒██░  ██▒░ ▓██▄   ▒██▒▓██  ▀█ ██▒▒ ▓██░ ▒░
+░██▄▄▄▄██ ▓▓█  ░██░░ ▓██▓ ░ ▒██   ██░   ▒██   ██░  ▒   ██▒░██░▓██▒  ▐▌██▒░ ▓██▓ ░ 
+ ▓█   ▓██▒▒▒█████▓   ▒██▒ ░ ░ ████▓▒░   ░ ████▓▒░▒██████▒▒░██░▒██░   ▓██░  ▒██▒ ░ 
+ ▒▒   ▓▒█░░▒▓▒ ▒ ▒   ▒ ░░   ░ ▒░▒░▒░    ░ ▒░▒░▒░ ▒ ▒▓▒ ▒ ░░▓  ░ ▒░   ▒ ▒   ▒ ░░   
+  ▒   ▒▒ ░░░▒░ ░ ░     ░      ░ ▒ ▒░      ░ ▒ ▒░ ░ ░▒  ░ ░ ▒ ░░ ░░   ░ ▒░    ░    
+  ░   ▒    ░░░ ░ ░   ░      ░ ░ ░ ▒     ░ ░ ░ ▒  ░  ░  ░   ▒ ░   ░   ░ ░   ░      
+      ░  ░   ░                  ░ ░         ░ ░        ░   ░           ░          
+
+"""
+    console.print(banner, style="bold red")
+    console.print(f"Auto OSINT Toolkit {VERSION}\n", style="bold red", markup=False)
+
 def save_report(data, folder="reports"):
     if not os.path.exists(folder):
         os.makedirs(folder)
@@ -24,9 +35,6 @@ def save_report(data, folder="reports"):
         json.dump(data, f, indent=4)
     console.print(f"[green]Report saved to {filename}[/green]")
 
-# --------------------------
-# Display Table
-# --------------------------
 def display_table(title, data_dict):
     table = Table(title=title)
     table.add_column("Field", style="cyan")
@@ -35,48 +43,19 @@ def display_table(title, data_dict):
         table.add_row(str(key), str(value))
     console.print(table)
 
-# --------------------------
-# Print Examples & Exit
-# --------------------------
-def print_examples():
-    console.print("\n[bold cyan]Auto OSINT Toolkit - Usage Examples[/bold cyan]\n")
-    console.print("1️⃣ [yellow]IP Lookup with Shodan API Key[/yellow]")
-    console.print("   python main.py --ip 8.8.8.8 --shodan YOUR_SHODAN_KEY\n")
-    
-    console.print("2️⃣ [yellow]Email Breach Check (HaveIBeenPwned API)[/yellow]")
-    console.print("   python main.py --email target@example.com --hibp YOUR_HIBP_KEY\n")
-    
-    console.print("3️⃣ [yellow]Username Search Across Platforms[/yellow]")
-    console.print("   python main.py --username johndoe\n")
-    
-    console.print("4️⃣ [yellow]Combine Multiple Lookups[/yellow]")
-    console.print("   python main.py --ip 1.1.1.1 --email test@mail.com --username alice --shodan KEY --hibp KEY\n")
-    
-    console.print("Reports are automatically saved in the [green]'reports/'[/green] folder.\n")
-    sys.exit(0)
-
-# --------------------------
-# Main Function
-# --------------------------
 def main():
-    parser = argparse.ArgumentParser(
-        description="Auto OSINT Toolkit — Gather public intelligence on IPs, Emails, and Usernames."
-    )
+    print_banner()  # Display banner at start
+
+    parser = argparse.ArgumentParser(description="Auto OSINT Toolkit")
     parser.add_argument("--ip", help="Target IP Address")
     parser.add_argument("--email", help="Target Email Address")
     parser.add_argument("--username", help="Target Username")
-    parser.add_argument("--shodan", help="Shodan API Key (for IP scanning)")
-    parser.add_argument("--hibp", help="HaveIBeenPwned API Key (for email breach checks)")
-    parser.add_argument("--examples", action="store_true", help="Show usage examples and exit")
-    
+    parser.add_argument("--shodan", help="Shodan API Key")
+    parser.add_argument("--hibp", help="HaveIBeenPwned API Key")
     args = parser.parse_args()
-
-    if args.examples:
-        print_examples()
 
     final_report = {}
 
-    # IP OSINT
     if args.ip:
         console.print(f"[bold yellow]Performing IP OSINT on {args.ip}...[/bold yellow]")
         geo = ip_lookup.ip_geolocation(args.ip)
@@ -95,7 +74,6 @@ def main():
 
         final_report['Shodan'] = shodan_data
 
-    # Email OSINT
     if args.email:
         console.print(f"[bold yellow]Performing Email OSINT on {args.email}...[/bold yellow]")
         hibp = email_lookup.hibp_breach_check(args.email, args.hibp)
@@ -112,7 +90,6 @@ def main():
         display_table("Email Validation", validation)
         final_report['Email Validation'] = validation
 
-    # Username OSINT
     if args.username:
         console.print(f"[bold yellow]Performing Username OSINT on {args.username}...[/bold yellow]")
         usernames = username_lookup.username_lookup(args.username)
